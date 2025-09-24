@@ -236,11 +236,16 @@
         
         .rock {
             position: absolute;
-            width: 20px;
-            height: 15px;
+            width: 35px;
+            height: 25px;
             background: #696969;
             border-radius: 50%;
-            border: 2px solid #2F4F4F;
+            border: 3px solid #2F4F4F;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.4);
         }
         
         .monster {
@@ -645,8 +650,9 @@
             }
             
             .rock {
-                width: 18px;
-                height: 13px;
+                width: 30px;
+                height: 22px;
+                font-size: 14px;
             }
         }
         
@@ -745,6 +751,7 @@
             <h1>🏴‍☠️ Pencarian Harta Karun 🏴‍☠️</h1>
             <div class="game-stats">
                 <div class="stat">⭐ Skor: <span id="score">0</span></div>
+                <div class="stat">🎯 Poin: <span id="points">0</span></div>
                 <div class="stat">💰 Harta: <span id="treasures">0</span>/12</div>
                 <div class="stat">⏱️ Waktu: <span id="timer">120</span>s</div>
             </div>
@@ -792,6 +799,7 @@
             playerX: 50,
             playerY: 50,
             score: 0,
+            points: 0,
             treasuresFound: 0,
             timeLeft: 120,
             gameRunning: true,
@@ -806,6 +814,7 @@
         const player = document.getElementById('player');
         const gameContainer = document.getElementById('gameContainer');
         const scoreElement = document.getElementById('score');
+        const pointsElement = document.getElementById('points');
         const treasuresElement = document.getElementById('treasures');
         const timerElement = document.getElementById('timer');
         const messageElement = document.getElementById('message');
@@ -934,6 +943,7 @@
                 playerX: 50,
                 playerY: 50,
                 score: 0,
+                points: 0,
                 treasuresFound: 0,
                 timeLeft: 120,
                 gameRunning: true,
@@ -1050,14 +1060,15 @@
             rockPositions.forEach((pos, index) => {
                 const rock = document.createElement('div');
                 rock.className = 'rock';
+                rock.innerHTML = '🪨';
                 rock.style.left = pos.x + 'px';
                 rock.style.top = pos.y + 'px';
                 gameContainer.appendChild(rock);
                 gameState.obstacles.push({
                     x: pos.x, 
                     y: pos.y, 
-                    width: 20, 
-                    height: 15
+                    width: 35, 
+                    height: 25
                 });
             });
         }
@@ -1169,7 +1180,7 @@
             
             let newX = gameState.playerX;
             let newY = gameState.playerY;
-            const moveDistance = Math.max(15, Math.min(25, containerWidth / 48)); // Responsive movement
+            const moveDistance = Math.max(25, Math.min(35, containerWidth / 35)); // Smoother movement
             
             switch(direction) {
                 case 'up':
@@ -1257,6 +1268,7 @@
         
         function updateUI() {
             scoreElement.textContent = gameState.score;
+            pointsElement.textContent = gameState.points;
             treasuresElement.textContent = gameState.treasuresFound;
             timerElement.textContent = gameState.timeLeft;
         }
@@ -1291,19 +1303,19 @@
                 messageText.innerHTML = `
                     🎉 Selamat ${currentPlayer}! 🎉<br>
                     Kamu berhasil menemukan semua harta karun!<br>
-                    Skor Akhir: ${gameState.score}
+                    Skor: ${gameState.score} | Poin: ${gameState.points}
                 `;
             } else if (reason === 'monster') {
                 messageText.innerHTML = `
                     👹 Monster Menangkapmu! 👹<br>
                     ${currentPlayer} menemukan ${gameState.treasuresFound}/12 harta karun<br>
-                    Skor Akhir: ${gameState.score}
+                    Skor: ${gameState.score} | Poin: ${gameState.points}
                 `;
             } else {
                 messageText.innerHTML = `
                     ⏰ Waktu Habis! ⏰<br>
                     ${currentPlayer} menemukan ${gameState.treasuresFound}/12 harta karun<br>
-                    Skor Akhir: ${gameState.score}
+                    Skor: ${gameState.score} | Poin: ${gameState.points}
                 `;
             }
             
@@ -1336,7 +1348,7 @@
             questionModal.style.display = 'none';
             
             if (isCorrect) {
-                gameState.score += 15;
+                gameState.points += 15;
                 updateUI();
                 showFeedback('🎉 Benar! +15 Poin!', '#27AE60');
             } else {
@@ -1483,5 +1495,5 @@
             }
         });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98404941a06d290d',t:'MTc1ODY5NTk4Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98406462738cfd88',t:'MTc1ODY5NzA5My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
