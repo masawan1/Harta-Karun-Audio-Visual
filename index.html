@@ -1,0 +1,1492 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Mencari Harta Karun</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka+One:wght@400&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Fredoka One', cursive;
+            background: linear-gradient(135deg, #87CEEB 0%, #98FB98 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .login-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        
+        .login-container {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+        }
+        
+        .login-container h1 {
+            color: #2C3E50;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .login-container p {
+            color: #7F8C8D;
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+        }
+        
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .input-group {
+            position: relative;
+        }
+        
+        .input-group input {
+            width: 100%;
+            padding: 15px 20px;
+            border: 3px solid #E8F4FD;
+            border-radius: 15px;
+            font-size: 1.1rem;
+            font-family: 'Fredoka One', cursive;
+            background: #F8FBFF;
+            transition: all 0.3s ease;
+        }
+        
+        .input-group input:focus {
+            outline: none;
+            border-color: #3498DB;
+            background: white;
+            transform: scale(1.02);
+        }
+        
+        .input-group label {
+            position: absolute;
+            left: 20px;
+            top: 15px;
+            color: #7F8C8D;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+        
+        .input-group input:focus + label,
+        .input-group input:not(:placeholder-shown) + label {
+            top: -10px;
+            left: 15px;
+            font-size: 0.8rem;
+            color: #3498DB;
+            background: white;
+            padding: 0 5px;
+        }
+        
+        .login-btn {
+            background: linear-gradient(135deg, #3498DB, #2980B9);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 15px;
+            font-size: 1.3rem;
+            font-family: 'Fredoka One', cursive;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+            width: 100%;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(52, 152, 219, 0.6);
+        }
+        
+        .login-btn:active {
+            transform: translateY(0);
+        }
+        
+        .game-screen {
+            display: none;
+            width: 100%;
+        }
+        
+        .welcome-message {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 15px 25px;
+            border-radius: 25px;
+            margin-bottom: 20px;
+            color: #2C3E50;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .game-header {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #2C3E50;
+        }
+        
+        .game-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .game-stats {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+            color: #2C3E50;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .stat {
+            background: rgba(255,255,255,0.8);
+            padding: 10px 20px;
+            border-radius: 25px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        .game-container {
+            position: relative;
+            width: 1200px;
+            height: 700px;
+            background: linear-gradient(45deg, #8FBC8F 0%, #90EE90 50%, #98FB98 100%);
+            border: 4px solid #654321;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+            margin: 0 auto;
+        }
+        
+        .player {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: #FFD700;
+            border: 3px solid #FFA500;
+            border-radius: 50%;
+            transition: all 0.15s ease;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+        
+        .treasure {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: #8B4513;
+            border: 2px solid #654321;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes glow {
+            from { box-shadow: 0 0 5px #FFD700; }
+            to { box-shadow: 0 0 20px #FFD700, 0 0 30px #FFD700; }
+        }
+        
+        .tree {
+            position: absolute;
+            width: 25px;
+            height: 35px;
+            background: #228B22;
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+        
+        .rock {
+            position: absolute;
+            width: 20px;
+            height: 15px;
+            background: #696969;
+            border-radius: 50%;
+            border: 2px solid #2F4F4F;
+        }
+        
+        .monster {
+            position: absolute;
+            width: 35px;
+            height: 35px;
+            background: #8B0000;
+            border: 3px solid #FF0000;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            z-index: 5;
+            transition: all 0.2s ease;
+        }
+        
+        .monster.paused {
+            animation: none !important;
+            opacity: 0.7;
+        }
+        
+        .controls {
+            margin-top: 20px;
+            text-align: center;
+            color: #2C3E50;
+        }
+        
+        .controls p {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+        
+        .control-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .arrow-keys {
+            display: grid;
+            grid-template-columns: repeat(3, 50px);
+            grid-template-rows: repeat(2, 50px);
+            gap: 5px;
+            justify-content: center;
+        }
+        
+        .arrow-key {
+            background: #3498DB;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        .arrow-key:hover {
+            background: #2980B9;
+            transform: translateY(-2px);
+        }
+        
+        .arrow-key:active {
+            transform: translateY(0);
+        }
+        
+        .up { grid-column: 2; grid-row: 1; }
+        .left { grid-column: 1; grid-row: 2; }
+        .down { grid-column: 2; grid-row: 2; }
+        .right { grid-column: 3; grid-row: 2; }
+        
+        .logout-btn {
+            background: #E74C3C;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 15px;
+            font-size: 1rem;
+            font-family: 'Fredoka One', cursive;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .logout-btn:hover {
+            background: #C0392B;
+            transform: scale(1.05);
+        }
+        
+        .message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0,0,0,0.9);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            font-size: 1.5rem;
+            text-align: center;
+            z-index: 100;
+            display: none;
+        }
+        
+        .question-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, #3498DB, #2980B9);
+            color: white;
+            padding: 30px;
+            border-radius: 20px;
+            font-size: 1.2rem;
+            text-align: center;
+            z-index: 200;
+            display: none;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            max-width: 500px;
+            width: 90%;
+        }
+        
+        .question-modal h3 {
+            margin-bottom: 20px;
+            color: #FFD700;
+            font-size: 1.4rem;
+        }
+        
+        .question-modal p {
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+        
+        .answer-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .answer-btn {
+            background: #27AE60;
+            color: white;
+            border: none;
+            padding: 15px 20px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-family: 'Fredoka One', cursive;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .answer-btn:hover {
+            background: #229954;
+            transform: scale(1.05);
+        }
+        
+        .restart-btn {
+            background: #27AE60;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.2rem;
+            font-family: 'Fredoka One', cursive;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .restart-btn:hover {
+            background: #229954;
+            transform: scale(1.05);
+        }
+        
+        /* Touch-friendly controls */
+        .touch-controls {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: none;
+            z-index: 50;
+        }
+        
+        .touch-controls.active {
+            display: block;
+        }
+        
+        .touch-joystick {
+            width: 120px;
+            height: 120px;
+            background: rgba(52, 152, 219, 0.3);
+            border: 3px solid #3498DB;
+            border-radius: 50%;
+            position: relative;
+            touch-action: none;
+        }
+        
+        .touch-stick {
+            width: 40px;
+            height: 40px;
+            background: #3498DB;
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            transition: all 0.1s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+        
+        /* Responsive breakpoints */
+        @media (max-width: 1400px) {
+            .game-container {
+                width: 95vw;
+                height: 60vh;
+                min-height: 500px;
+            }
+        }
+        
+        @media (max-width: 1024px) {
+            .game-container {
+                width: 95vw;
+                height: 55vh;
+                min-height: 450px;
+            }
+            
+            .game-header h1 {
+                font-size: 2.2rem;
+            }
+            
+            .arrow-keys {
+                grid-template-columns: repeat(3, 45px);
+                grid-template-rows: repeat(2, 45px);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .game-container {
+                width: 100vw;
+                height: 50vh;
+                min-height: 400px;
+                margin: 0 -10px;
+            }
+            
+            .game-header h1 {
+                font-size: 1.8rem;
+                margin-bottom: 5px;
+            }
+            
+            .game-stats {
+                flex-direction: row;
+                gap: 15px;
+                margin-bottom: 15px;
+                font-size: 1rem;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+            
+            .stat {
+                padding: 8px 15px;
+                font-size: 0.9rem;
+            }
+            
+            .controls {
+                margin-top: 15px;
+            }
+            
+            .controls p {
+                font-size: 1rem;
+                margin-bottom: 15px;
+            }
+            
+            .control-buttons {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .arrow-keys {
+                grid-template-columns: repeat(3, 50px);
+                grid-template-rows: repeat(2, 50px);
+                gap: 8px;
+            }
+            
+            .arrow-key {
+                font-size: 18px;
+            }
+            
+            .touch-controls {
+                display: block;
+                bottom: 15px;
+                right: 15px;
+            }
+            
+            .touch-joystick {
+                width: 100px;
+                height: 100px;
+            }
+            
+            .touch-stick {
+                width: 35px;
+                height: 35px;
+            }
+            
+            .question-modal {
+                width: 95%;
+                padding: 25px;
+                font-size: 1.1rem;
+            }
+            
+            .question-modal h3 {
+                font-size: 1.3rem;
+            }
+            
+            .answer-btn {
+                padding: 12px 15px;
+                font-size: 0.9rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 30px 20px;
+                width: 95%;
+            }
+            
+            .login-container h1 {
+                font-size: 2rem;
+            }
+            
+            .game-container {
+                height: 45vh;
+                min-height: 350px;
+            }
+            
+            .game-header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .game-stats {
+                gap: 10px;
+                font-size: 0.9rem;
+            }
+            
+            .stat {
+                padding: 6px 12px;
+                font-size: 0.8rem;
+            }
+            
+            .controls p {
+                font-size: 0.9rem;
+            }
+            
+            .arrow-keys {
+                grid-template-columns: repeat(3, 45px);
+                grid-template-rows: repeat(2, 45px);
+                gap: 6px;
+            }
+            
+            .arrow-key {
+                font-size: 16px;
+            }
+            
+            .touch-joystick {
+                width: 90px;
+                height: 90px;
+            }
+            
+            .touch-stick {
+                width: 30px;
+                height: 30px;
+            }
+            
+            .player {
+                width: 35px;
+                height: 35px;
+                font-size: 18px;
+            }
+            
+            .treasure {
+                width: 25px;
+                height: 25px;
+                font-size: 14px;
+            }
+            
+            .monster {
+                width: 30px;
+                height: 30px;
+                font-size: 16px;
+            }
+            
+            .tree {
+                width: 20px;
+                height: 30px;
+                font-size: 12px;
+            }
+            
+            .rock {
+                width: 18px;
+                height: 13px;
+            }
+        }
+        
+        /* iPhone specific adjustments */
+        @media (max-width: 414px) and (-webkit-min-device-pixel-ratio: 2) {
+            .game-container {
+                height: 40vh;
+                min-height: 320px;
+            }
+            
+            .touch-controls {
+                bottom: 10px;
+                right: 10px;
+            }
+        }
+        
+        /* Landscape mode for mobile */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .game-header {
+                margin-bottom: 10px;
+            }
+            
+            .game-header h1 {
+                font-size: 1.5rem;
+                margin-bottom: 5px;
+            }
+            
+            .game-stats {
+                margin-bottom: 10px;
+                gap: 10px;
+            }
+            
+            .game-container {
+                height: 60vh;
+                min-height: 250px;
+            }
+            
+            .controls {
+                margin-top: 10px;
+            }
+            
+            .controls p {
+                margin-bottom: 8px;
+                font-size: 0.9rem;
+            }
+            
+            .arrow-keys {
+                grid-template-columns: repeat(3, 40px);
+                grid-template-rows: repeat(2, 40px);
+            }
+            
+            .touch-controls {
+                bottom: 10px;
+                right: 10px;
+            }
+            
+            .touch-joystick {
+                width: 80px;
+                height: 80px;
+            }
+            
+            .touch-stick {
+                width: 25px;
+                height: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div class="login-screen" id="loginScreen">
+        <div class="login-container">
+            <h1>🏴‍☠️ Harta Karun 🏴‍☠️</h1>
+            <p>Masuk untuk memulai petualangan mencari harta karun!</p>
+            <form class="login-form" onsubmit="handleLogin(event)">
+                <div class="input-group">
+                    <input type="text" id="username" placeholder=" " required>
+                    <label for="username">Nama Petualang</label>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="password" placeholder=" " required>
+                    <label for="password">Kata Sandi</label>
+                </div>
+                <button type="submit" class="login-btn">🚀 Mulai Petualangan</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Game Screen -->
+    <div class="game-screen" id="gameScreen">
+        <div class="welcome-message" id="welcomeMessage">
+            Selamat datang, <span id="playerName">Petualang</span>! 🎉
+        </div>
+        
+        <div class="game-header">
+            <h1>🏴‍☠️ Pencarian Harta Karun 🏴‍☠️</h1>
+            <div class="game-stats">
+                <div class="stat">⭐ Skor: <span id="score">0</span></div>
+                <div class="stat">🎯 Poin: <span id="points">0</span></div>
+                <div class="stat">💰 Harta: <span id="treasures">0</span>/12</div>
+                <div class="stat">⏱️ Waktu: <span id="timer">120</span>s</div>
+            </div>
+        </div>
+        
+        <div class="game-container" id="gameContainer">
+            <div class="player" id="player">🧙‍♂️</div>
+        </div>
+        
+        <div class="controls">
+            <p>Gunakan tombol panah atau joystick untuk bergerak dan cari harta karun!</p>
+            <div class="control-buttons">
+                <div class="arrow-keys">
+                    <button class="arrow-key up" onclick="movePlayer('up')">↑</button>
+                    <button class="arrow-key left" onclick="movePlayer('left')">←</button>
+                    <button class="arrow-key down" onclick="movePlayer('down')">↓</button>
+                    <button class="arrow-key right" onclick="movePlayer('right')">→</button>
+                </div>
+                <button class="logout-btn" onclick="logout()">🚪 Keluar</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Touch Controls for Mobile -->
+    <div class="touch-controls" id="touchControls">
+        <div class="touch-joystick" id="touchJoystick">
+            <div class="touch-stick" id="touchStick"></div>
+        </div>
+    </div>
+    
+    <div class="message" id="message">
+        <div id="messageText"></div>
+        <button class="restart-btn" onclick="restartGame()">Main Lagi</button>
+    </div>
+    
+    <div class="question-modal" id="questionModal">
+        <h3>🧠 Pertanyaan Bonus! 🧠</h3>
+        <p id="questionText"></p>
+        <div class="answer-buttons" id="answerButtons"></div>
+    </div>
+
+    <script>
+        let currentPlayer = '';
+        let gameState = {
+            playerX: 50,
+            playerY: 50,
+            score: 0,
+            points: 0,
+            treasuresFound: 0,
+            timeLeft: 120,
+            gameRunning: true,
+            questionActive: false,
+            treasures: [],
+            obstacles: [],
+            monsters: [],
+            monsterInterval: null,
+            timerInterval: null
+        };
+        
+        const player = document.getElementById('player');
+        const gameContainer = document.getElementById('gameContainer');
+        const scoreElement = document.getElementById('score');
+        const pointsElement = document.getElementById('points');
+        const treasuresElement = document.getElementById('treasures');
+        const timerElement = document.getElementById('timer');
+        const messageElement = document.getElementById('message');
+        const messageText = document.getElementById('messageText');
+        const questionModal = document.getElementById('questionModal');
+        const questionText = document.getElementById('questionText');
+        const answerButtons = document.getElementById('answerButtons');
+        const loginScreen = document.getElementById('loginScreen');
+        const gameScreen = document.getElementById('gameScreen');
+        const welcomeMessage = document.getElementById('welcomeMessage');
+        const playerNameSpan = document.getElementById('playerName');
+        
+        const questions = [
+            {
+                question: "Mikrofon jenis apa yang ideal untuk perekaman vokal dan instrumen di studio karena sifatnya yang sensitif dan detail?",
+                answers: ["Lavaliere", "Shotgun", "Dinamik", "Kondenser"],
+                correct: 3
+            },
+            {
+                question: "Dalam konteks peralatan video, apa fungsi utama dari Lensa?",
+                answers: ["Menjaga gambar tetap stabil dan bebas guncangan", "Mengontrol pencahayaan untuk menciptakan mood", "Menentukan sudut pandang dan kualitas gambar", "Sebagai alat utama perekam gambar"],
+                correct: 2
+            },
+            {
+                question: "Mengapa Tripod & Stabilizer dianggap penting dalam produksi video?",
+                answers: ["Untuk mengatur sensitivitas sensor kamera", "Untuk mengontrol fokus dan kedalaman bidang", "Untuk menentukan sudut pandang yang luas atau sempit", "Untuk menjaga gambar tetap stabil dan bebas guncangan"],
+                correct: 3
+            },
+            {
+                question: "Elemen mana dalam Segitiga Eksposur yang mengontrol jumlah cahaya yang masuk ke kamera?",
+                answers: ["Shutter Speed", "Aperture", "ISO", "F-stop"],
+                correct: 1
+            },
+            {
+                question: "Bagaimana Shutter Speed yang cepat mempengaruhi gambar?",
+                answers: ["Membekukan gerakan", "Membuat gambar lebih terang", "Membuat gambar lebih gelap", "Menciptakan efek blur pada gerakan"],
+                correct: 0
+            },
+            {
+                question: "Jika Anda merekam di kondisi gelap dan ingin sensor kamera menjadi lebih sensitif terhadap cahaya, elemen apa yang harus Anda sesuaikan?",
+                answers: ["Aperture", "Shutter Speed", "ISO", "Lighting"],
+                correct: 2
+            },
+            {
+                question: "Apa yang dimaksud dengan 'Rule of Thirds' dalam komposisi dasar?",
+                answers: ["Menciptakan komposisi yang seimbang dengan menempatkan subjek di tengah", "Menggunakan garis untuk menuntun mata audiens ke subjek utama", "Menggunakan elemen di latar depan untuk membingkai subjek utama", "Meletakkan subjek utama di salah satu titik potong dari 4 garis imajiner yang membagi frame menjadi 9 bagian"],
+                correct: 3
+            },
+            {
+                question: "Dalam komposisi 'Leading Lines', apa tujuan utama dari menggunakan elemen garis?",
+                answers: ["Untuk menciptakan bingkai di sekitar subjek", "Untuk membagi frame menjadi beberapa bagian yang sama", "Untuk membuat gambar lebih simetris", "Untuk menuntun mata audiens ke arah subjek utama"],
+                correct: 3
+            },
+            {
+                question: "Mengapa Anda menggunakan elemen di latar depan seperti jendela atau lengkungan untuk 'Framing' subjek utama?",
+                answers: ["Untuk membuat komposisi yang seimbang", "Untuk menciptakan kedalaman dan memfokuskan perhatian pada subjek", "Untuk menuntun mata penonton ke subjek", "Untuk membagi gambar menjadi tiga bagian"],
+                correct: 1
+            },
+            {
+                question: "Apa perbedaan utama antara mikrofon Kondenser dan Dinamik?",
+                answers: ["Kondenser digunakan di film, sedangkan Dinamik digunakan di podcast", "Kondenser lebih cocok untuk suara keras, sedangkan Dinamik untuk vokal di studio", "Kondenser membutuhkan baterai atau daya, sedangkan Dinamik tidak", "Kondenser lebih tahan banting, sedangkan Dinamik lebih sensitif"],
+                correct: 2
+            }
+        ];
+        
+        function handleLogin(event) {
+            event.preventDefault();
+            
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+            
+            if (username.length < 3) {
+                alert('Nama petualang minimal 3 karakter!');
+                return;
+            }
+            
+            if (password.length < 4) {
+                alert('Kata sandi minimal 4 karakter!');
+                return;
+            }
+            
+            currentPlayer = username;
+            playerNameSpan.textContent = username;
+            
+            // Hide login screen and show game
+            loginScreen.style.display = 'none';
+            gameScreen.style.display = 'block';
+            
+            // Show welcome message temporarily
+            setTimeout(() => {
+                welcomeMessage.style.display = 'none';
+            }, 3000);
+            
+            // Initialize game
+            initGame();
+        }
+        
+        function logout() {
+            if (confirm('Yakin ingin keluar dari permainan?')) {
+                // Clear intervals
+                if (gameState.monsterInterval) clearInterval(gameState.monsterInterval);
+                if (gameState.timerInterval) clearInterval(gameState.timerInterval);
+                
+                // Reset forms
+                document.getElementById('username').value = '';
+                document.getElementById('password').value = '';
+                
+                // Show login screen
+                loginScreen.style.display = 'flex';
+                gameScreen.style.display = 'none';
+                welcomeMessage.style.display = 'block';
+                
+                // Hide modals
+                messageElement.style.display = 'none';
+                questionModal.style.display = 'none';
+            }
+        }
+        
+        function initGame() {
+            // Clear any existing intervals
+            if (gameState.monsterInterval) clearInterval(gameState.monsterInterval);
+            if (gameState.timerInterval) clearInterval(gameState.timerInterval);
+            
+            // Reset game state
+            gameState = {
+                playerX: 50,
+                playerY: 50,
+                score: 0,
+                points: 0,
+                treasuresFound: 0,
+                timeLeft: 120,
+                gameRunning: true,
+                questionActive: false,
+                treasures: [],
+                obstacles: [],
+                monsters: [],
+                monsterInterval: null,
+                timerInterval: null
+            };
+            
+            // Clear game container but keep player
+            const existingElements = gameContainer.querySelectorAll(':not(.player)');
+            existingElements.forEach(el => el.remove());
+            
+            // Make sure player exists
+            let playerElement = document.getElementById('player');
+            if (!playerElement) {
+                playerElement = document.createElement('div');
+                playerElement.className = 'player';
+                playerElement.id = 'player';
+                playerElement.innerHTML = '🧙‍♂️';
+                gameContainer.appendChild(playerElement);
+            }
+            
+            // Generate game elements
+            generateTreasures();
+            generateObstacles();
+            generateMonsters();
+            
+            // Update player position
+            updatePlayerPosition();
+            
+            // Update UI
+            updateUI();
+            
+            // Start game systems
+            startTimer();
+            startMonsterAI();
+            
+            // Initialize touch controls
+            initTouchControls();
+            
+            // Hide modals
+            messageElement.style.display = 'none';
+            questionModal.style.display = 'none';
+        }
+        
+        function generateTreasures() {
+            const containerRect = gameContainer.getBoundingClientRect();
+            const containerWidth = containerRect.width || 1200;
+            const containerHeight = containerRect.height || 700;
+            
+            // Scale positions based on container size
+            const scaleX = containerWidth / 1200;
+            const scaleY = containerHeight / 700;
+            
+            const treasurePositions = [
+                {x: 200 * scaleX, y: 150 * scaleY}, {x: 500 * scaleX, y: 200 * scaleY}, {x: 350 * scaleX, y: 400 * scaleY},
+                {x: 650 * scaleX, y: 120 * scaleY}, {x: 150 * scaleX, y: 350 * scaleY}, {x: 700 * scaleX, y: 300 * scaleY},
+                {x: 300 * scaleX, y: 450 * scaleY}, {x: 550 * scaleX, y: 400 * scaleY}, {x: 800 * scaleX, y: 180 * scaleY},
+                {x: 850 * scaleX, y: 450 * scaleY}, {x: 1000 * scaleX, y: 250 * scaleY}, {x: 950 * scaleX, y: 500 * scaleY}
+            ];
+            
+            treasurePositions.forEach((pos, index) => {
+                const treasure = document.createElement('div');
+                treasure.className = 'treasure';
+                treasure.innerHTML = '💰';
+                treasure.style.left = Math.min(pos.x, containerWidth - 30) + 'px';
+                treasure.style.top = Math.min(pos.y, containerHeight - 30) + 'px';
+                treasure.id = 'treasure-' + index;
+                gameContainer.appendChild(treasure);
+                gameState.treasures.push({
+                    x: Math.min(pos.x, containerWidth - 30), 
+                    y: Math.min(pos.y, containerHeight - 30), 
+                    id: 'treasure-' + index,
+                    collected: false
+                });
+            });
+        }
+        
+        function generateObstacles() {
+            // Trees
+            const treePositions = [
+                {x: 250, y: 250}, {x: 400, y: 300}, {x: 550, y: 250},
+                {x: 300, y: 150}, {x: 600, y: 350}, {x: 750, y: 200},
+                {x: 450, y: 500}, {x: 200, y: 450}, {x: 900, y: 300},
+                {x: 1050, y: 400}, {x: 850, y: 100}, {x: 1100, y: 150}
+            ];
+            
+            treePositions.forEach((pos, index) => {
+                const tree = document.createElement('div');
+                tree.className = 'tree';
+                tree.innerHTML = '🌳';
+                tree.style.left = pos.x + 'px';
+                tree.style.top = pos.y + 'px';
+                gameContainer.appendChild(tree);
+                gameState.obstacles.push({
+                    x: pos.x, 
+                    y: pos.y, 
+                    width: 25, 
+                    height: 35
+                });
+            });
+            
+            // Rocks
+            const rockPositions = [
+                {x: 350, y: 100}, {x: 450, y: 200}, {x: 150, y: 300},
+                {x: 650, y: 250}, {x: 400, y: 350}, {x: 750, y: 400},
+                {x: 500, y: 500}, {x: 800, y: 300}, {x: 950, y: 200},
+                {x: 1000, y: 450}, {x: 1100, y: 350}, {x: 900, y: 550}
+            ];
+            
+            rockPositions.forEach((pos, index) => {
+                const rock = document.createElement('div');
+                rock.className = 'rock';
+                rock.style.left = pos.x + 'px';
+                rock.style.top = pos.y + 'px';
+                gameContainer.appendChild(rock);
+                gameState.obstacles.push({
+                    x: pos.x, 
+                    y: pos.y, 
+                    width: 20, 
+                    height: 15
+                });
+            });
+        }
+        
+        function generateMonsters() {
+            const monsterPositions = [
+                {x: 700, y: 450}, {x: 500, y: 100}, {x: 100, y: 250}, {x: 1000, y: 350}
+            ];
+            
+            monsterPositions.forEach((pos, index) => {
+                const monster = document.createElement('div');
+                monster.className = 'monster';
+                monster.innerHTML = '👹';
+                monster.style.left = pos.x + 'px';
+                monster.style.top = pos.y + 'px';
+                monster.id = 'monster-' + index;
+                gameContainer.appendChild(monster);
+                gameState.monsters.push({
+                    x: pos.x, 
+                    y: pos.y, 
+                    id: 'monster-' + index,
+                    speed: 0.8 + Math.random() * 0.4
+                });
+            });
+        }
+        
+        function startMonsterAI() {
+            gameState.monsterInterval = setInterval(() => {
+                if (!gameState.gameRunning || gameState.questionActive) {
+                    // Pause monsters visually
+                    gameState.monsters.forEach(monster => {
+                        const monsterElement = document.getElementById(monster.id);
+                        if (monsterElement) {
+                            monsterElement.classList.add('paused');
+                        }
+                    });
+                    return;
+                }
+                
+                // Resume monsters
+                gameState.monsters.forEach(monster => {
+                    const monsterElement = document.getElementById(monster.id);
+                    if (monsterElement) {
+                        monsterElement.classList.remove('paused');
+                    }
+                    moveMonster(monster);
+                    checkMonsterCollision(monster);
+                });
+            }, 300);
+        }
+        
+        function moveMonster(monster) {
+            const dx = gameState.playerX - monster.x;
+            const dy = gameState.playerY - monster.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            
+            if (distance > 0 && distance < 350) { // Only chase if player is nearby
+                const moveX = (dx / distance) * monster.speed * 10;
+                const moveY = (dy / distance) * monster.speed * 10;
+                
+                const newX = Math.max(0, Math.min(1165, monster.x + moveX));
+                const newY = Math.max(0, Math.min(665, monster.y + moveY));
+                
+                // Check collision with obstacles
+                if (!checkMonsterObstacleCollision(newX, newY)) {
+                    monster.x = newX;
+                    monster.y = newY;
+                    
+                    const monsterElement = document.getElementById(monster.id);
+                    if (monsterElement) {
+                        monsterElement.style.left = monster.x + 'px';
+                        monsterElement.style.top = monster.y + 'px';
+                    }
+                }
+            }
+        }
+        
+        function checkMonsterObstacleCollision(x, y) {
+            const monsterSize = 35;
+            
+            for (let obstacle of gameState.obstacles) {
+                if (x < obstacle.x + obstacle.width &&
+                    x + monsterSize > obstacle.x &&
+                    y < obstacle.y + obstacle.height &&
+                    y + monsterSize > obstacle.y) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        
+        function checkMonsterCollision(monster) {
+            const distance = Math.sqrt(
+                Math.pow(gameState.playerX - monster.x, 2) + 
+                Math.pow(gameState.playerY - monster.y, 2)
+            );
+            
+            if (distance < 35) {
+                endGame(false, 'monster');
+            }
+        }
+        
+        function movePlayer(direction) {
+            if (!gameState.gameRunning || gameState.questionActive) return;
+            
+            const containerRect = gameContainer.getBoundingClientRect();
+            const containerWidth = containerRect.width || 1200;
+            const containerHeight = containerRect.height || 700;
+            
+            let newX = gameState.playerX;
+            let newY = gameState.playerY;
+            const moveDistance = Math.max(15, Math.min(25, containerWidth / 48)); // Responsive movement
+            
+            switch(direction) {
+                case 'up':
+                    newY = Math.max(0, gameState.playerY - moveDistance);
+                    break;
+                case 'down':
+                    newY = Math.min(containerHeight - 40, gameState.playerY + moveDistance);
+                    break;
+                case 'left':
+                    newX = Math.max(0, gameState.playerX - moveDistance);
+                    break;
+                case 'right':
+                    newX = Math.min(containerWidth - 40, gameState.playerX + moveDistance);
+                    break;
+            }
+            
+            // Check collision with obstacles
+            if (!checkCollision(newX, newY)) {
+                gameState.playerX = newX;
+                gameState.playerY = newY;
+                updatePlayerPosition();
+                checkTreasureCollection();
+            }
+        }
+        
+        function checkCollision(x, y) {
+            const playerSize = 40;
+            
+            for (let obstacle of gameState.obstacles) {
+                if (x < obstacle.x + obstacle.width &&
+                    x + playerSize > obstacle.x &&
+                    y < obstacle.y + obstacle.height &&
+                    y + playerSize > obstacle.y) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        
+        function updatePlayerPosition() {
+            const playerElement = document.getElementById('player');
+            if (playerElement) {
+                playerElement.style.left = gameState.playerX + 'px';
+                playerElement.style.top = gameState.playerY + 'px';
+            }
+        }
+        
+        function checkTreasureCollection() {
+            gameState.treasures.forEach((treasure) => {
+                if (treasure.collected) return;
+                
+                const distance = Math.sqrt(
+                    Math.pow(gameState.playerX - treasure.x, 2) + 
+                    Math.pow(gameState.playerY - treasure.y, 2)
+                );
+                
+                if (distance < 35) {
+                    // Collect treasure
+                    treasure.collected = true;
+                    gameState.treasuresFound++;
+                    gameState.score += 100;
+                    
+                    // Remove treasure from DOM
+                    const treasureElement = document.getElementById(treasure.id);
+                    if (treasureElement) {
+                        treasureElement.remove();
+                    }
+                    
+                    updateUI();
+                    
+                    // Show question
+                    setTimeout(() => {
+                        showQuestion();
+                    }, 200);
+                    
+                    // Check win condition
+                    if (gameState.treasuresFound >= 12) {
+                        setTimeout(() => {
+                            endGame(true);
+                        }, 500);
+                    }
+                }
+            });
+        }
+        
+        function updateUI() {
+            scoreElement.textContent = gameState.score;
+            pointsElement.textContent = gameState.points;
+            treasuresElement.textContent = gameState.treasuresFound;
+            timerElement.textContent = gameState.timeLeft;
+        }
+        
+        function startTimer() {
+            gameState.timerInterval = setInterval(() => {
+                if (!gameState.gameRunning) {
+                    return;
+                }
+                
+                gameState.timeLeft--;
+                updateUI();
+                
+                if (gameState.timeLeft <= 0) {
+                    endGame(false, 'time');
+                }
+            }, 1000);
+        }
+        
+        function endGame(won, reason = 'time') {
+            gameState.gameRunning = false;
+            gameState.questionActive = false;
+            
+            // Clear intervals
+            if (gameState.monsterInterval) clearInterval(gameState.monsterInterval);
+            if (gameState.timerInterval) clearInterval(gameState.timerInterval);
+            
+            // Hide question modal if open
+            questionModal.style.display = 'none';
+            
+            if (won) {
+                messageText.innerHTML = `
+                    🎉 Selamat ${currentPlayer}! 🎉<br>
+                    Kamu berhasil menemukan semua harta karun!<br>
+                    Skor: ${gameState.score} | Poin: ${gameState.points}
+                `;
+            } else if (reason === 'monster') {
+                messageText.innerHTML = `
+                    👹 Monster Menangkapmu! 👹<br>
+                    ${currentPlayer} menemukan ${gameState.treasuresFound}/12 harta karun<br>
+                    Skor: ${gameState.score} | Poin: ${gameState.points}
+                `;
+            } else {
+                messageText.innerHTML = `
+                    ⏰ Waktu Habis! ⏰<br>
+                    ${currentPlayer} menemukan ${gameState.treasuresFound}/12 harta karun<br>
+                    Skor: ${gameState.score} | Poin: ${gameState.points}
+                `;
+            }
+            
+            messageElement.style.display = 'block';
+        }
+        
+        function showQuestion() {
+            gameState.questionActive = true;
+            
+            const randomQuestion = questions[Math.floor(Math.random() * questions.length)];
+            questionText.textContent = randomQuestion.question;
+            
+            // Clear previous buttons
+            answerButtons.innerHTML = '';
+            
+            // Create answer buttons
+            randomQuestion.answers.forEach((answer, index) => {
+                const button = document.createElement('button');
+                button.className = 'answer-btn';
+                button.textContent = answer;
+                button.onclick = () => answerQuestion(index === randomQuestion.correct);
+                answerButtons.appendChild(button);
+            });
+            
+            questionModal.style.display = 'block';
+        }
+        
+        function answerQuestion(isCorrect) {
+            gameState.questionActive = false;
+            questionModal.style.display = 'none';
+            
+            if (isCorrect) {
+                gameState.points += 15;
+                updateUI();
+                showFeedback('🎉 Benar! +15 Poin!', '#27AE60');
+            } else {
+                showFeedback('❌ Salah! Coba lagi!', '#E74C3C');
+            }
+        }
+        
+        function showFeedback(text, color) {
+            const feedback = document.createElement('div');
+            feedback.style.cssText = `
+                position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+                background: ${color}; color: white; padding: 15px 30px;
+                border-radius: 25px; font-family: 'Fredoka One', cursive;
+                z-index: 300; font-size: 1.2rem;
+            `;
+            feedback.textContent = text;
+            document.body.appendChild(feedback);
+            
+            setTimeout(() => {
+                if (document.body.contains(feedback)) {
+                    document.body.removeChild(feedback);
+                }
+            }, 2000);
+        }
+        
+        function restartGame() {
+            initGame();
+        }
+        
+        // Touch controls for mobile devices
+        function initTouchControls() {
+            const touchControls = document.getElementById('touchControls');
+            const touchJoystick = document.getElementById('touchJoystick');
+            const touchStick = document.getElementById('touchStick');
+            
+            // Show touch controls on mobile devices
+            if (isMobileDevice()) {
+                touchControls.classList.add('active');
+            }
+            
+            let isDragging = false;
+            let startX, startY;
+            let moveInterval;
+            
+            // Touch start
+            touchJoystick.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                if (!gameState.gameRunning || gameState.questionActive) return;
+                
+                isDragging = true;
+                const touch = e.touches[0];
+                const rect = touchJoystick.getBoundingClientRect();
+                startX = rect.left + rect.width / 2;
+                startY = rect.top + rect.height / 2;
+                
+                // Start continuous movement
+                moveInterval = setInterval(() => {
+                    if (isDragging) {
+                        handleJoystickMove();
+                    }
+                }, 150);
+            });
+            
+            // Touch move
+            touchJoystick.addEventListener('touchmove', (e) => {
+                e.preventDefault();
+                if (!isDragging || !gameState.gameRunning || gameState.questionActive) return;
+                
+                const touch = e.touches[0];
+                const deltaX = touch.clientX - startX;
+                const deltaY = touch.clientY - startY;
+                const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+                const maxDistance = 40;
+                
+                if (distance <= maxDistance) {
+                    touchStick.style.transform = `translate(calc(-50% + ${deltaX}px), calc(-50% + ${deltaY}px))`;
+                } else {
+                    const angle = Math.atan2(deltaY, deltaX);
+                    const limitedX = Math.cos(angle) * maxDistance;
+                    const limitedY = Math.sin(angle) * maxDistance;
+                    touchStick.style.transform = `translate(calc(-50% + ${limitedX}px), calc(-50% + ${limitedY}px))`;
+                }
+            });
+            
+            // Touch end
+            touchJoystick.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                isDragging = false;
+                touchStick.style.transform = 'translate(-50%, -50%)';
+                
+                if (moveInterval) {
+                    clearInterval(moveInterval);
+                    moveInterval = null;
+                }
+            });
+            
+            function handleJoystickMove() {
+                const stickTransform = touchStick.style.transform;
+                const matches = stickTransform.match(/translate\(calc\(-50% \+ (-?\d+(?:\.\d+)?)px\), calc\(-50% \+ (-?\d+(?:\.\d+)?)px\)\)/);
+                
+                if (matches) {
+                    const deltaX = parseFloat(matches[1]);
+                    const deltaY = parseFloat(matches[2]);
+                    const threshold = 15;
+                    
+                    if (Math.abs(deltaX) > threshold || Math.abs(deltaY) > threshold) {
+                        if (Math.abs(deltaX) > Math.abs(deltaY)) {
+                            movePlayer(deltaX > 0 ? 'right' : 'left');
+                        } else {
+                            movePlayer(deltaY > 0 ? 'down' : 'up');
+                        }
+                    }
+                }
+            }
+        }
+        
+        function isMobileDevice() {
+            return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
+                   ('ontouchstart' in window) || 
+                   (navigator.maxTouchPoints > 0);
+        }
+        
+        // Keyboard controls
+        document.addEventListener('keydown', (e) => {
+            if (gameState.questionActive || loginScreen.style.display !== 'none') return;
+            
+            switch(e.key) {
+                case 'ArrowUp':
+                    e.preventDefault();
+                    movePlayer('up');
+                    break;
+                case 'ArrowDown':
+                    e.preventDefault();
+                    movePlayer('down');
+                    break;
+                case 'ArrowLeft':
+                    e.preventDefault();
+                    movePlayer('left');
+                    break;
+                case 'ArrowRight':
+                    e.preventDefault();
+                    movePlayer('right');
+                    break;
+            }
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98404d21934091cc',t:'MTc1ODY5NjE0MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
