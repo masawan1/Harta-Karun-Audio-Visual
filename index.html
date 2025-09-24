@@ -236,16 +236,11 @@
         
         .rock {
             position: absolute;
-            width: 35px;
-            height: 25px;
+            width: 20px;
+            height: 15px;
             background: #696969;
             border-radius: 50%;
-            border: 3px solid #2F4F4F;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 16px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+            border: 2px solid #2F4F4F;
         }
         
         .monster {
@@ -650,9 +645,8 @@
             }
             
             .rock {
-                width: 30px;
-                height: 22px;
-                font-size: 14px;
+                width: 18px;
+                height: 13px;
             }
         }
         
@@ -1060,15 +1054,14 @@
             rockPositions.forEach((pos, index) => {
                 const rock = document.createElement('div');
                 rock.className = 'rock';
-                rock.innerHTML = '🪨';
                 rock.style.left = pos.x + 'px';
                 rock.style.top = pos.y + 'px';
                 gameContainer.appendChild(rock);
                 gameState.obstacles.push({
                     x: pos.x, 
                     y: pos.y, 
-                    width: 35, 
-                    height: 25
+                    width: 20, 
+                    height: 15
                 });
             });
         }
@@ -1180,7 +1173,7 @@
             
             let newX = gameState.playerX;
             let newY = gameState.playerY;
-            const moveDistance = Math.max(25, Math.min(35, containerWidth / 35)); // Smoother movement
+            const moveDistance = Math.max(15, Math.min(25, containerWidth / 48)); // Responsive movement
             
             switch(direction) {
                 case 'up':
@@ -1495,5 +1488,5 @@
             }
         });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98406462738cfd88',t:'MTc1ODY5NzA5My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98404d21934091cc',t:'MTc1ODY5NjE0MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
